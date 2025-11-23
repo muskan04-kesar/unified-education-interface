@@ -9,6 +9,16 @@ const studentSchema = new mongoose.Schema({
     unique: true 
   },
 
+  // ⭐ ADD THESE FIELDS HERE
+  aadhaarVerified: {
+    type: Boolean,
+    default: false
+  },
+  
+  aadhaarVerifiedAt: {
+    type: Date
+  },
+
   guardianName: { type: String },
   guardianPhone: { type: String },
 
@@ -48,5 +58,12 @@ const studentSchema = new mongoose.Schema({
 
 studentSchema.index({ aadhaar: 1 }, { unique: true });
 studentSchema.index({ instituteId: 1 });
+studentSchema.pre('save', function(next) {
+  if (this.isModified('aadhaar')) {
+    // Remove spaces/hyphens
+    this.aadhaar = this.aadhaar.replace(/[\s-]/g, '');
+  }
+  next();
+});
 
 export default mongoose.model("Student", studentSchema);

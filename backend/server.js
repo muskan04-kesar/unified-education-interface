@@ -12,6 +12,8 @@ import studentRoutes from "./routes/studentRoutes.js";
 import performanceRoutes from "./routes/performanceRoutes.js";
 import govReportRoutes from "./routes/govReportRoutes.js";
 
+import { authMiddleware } from "./middleware/auth.js"; // ✅ Correct
+
 dotenv.config();
 
 const app = express();
@@ -31,6 +33,18 @@ app.use("/api/classes", classRoutes);
 app.use("/api/students", studentRoutes);
 app.use("/api/performance", performanceRoutes);
 app.use("/api/govreports", govReportRoutes);
+
+// ⭐ Protected route
+app.get("/api/protected", authMiddleware, (req, res) => {
+  res.json({
+    message: "Protected route accessed ",
+    user: req.user,
+  });
+});
+
+app.get("/", (req, res) => {
+  res.send("Hey Muskan  Your backend is running perfectly.");
+});
 
 // basic error handler
 app.use((err, req, res, next) => {
