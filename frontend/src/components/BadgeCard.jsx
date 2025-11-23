@@ -1,0 +1,1 @@
+export default function BadgeCard({title}){return <span style={{display:'inline-block',padding:'6px 10px',borderRadius:999,background:'linear-gradient(90deg,#0ea5e9,#60a5fa)',color:'#fff',marginRight:8,fontWeight:700}}>{title}</span>}
