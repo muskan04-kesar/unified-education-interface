@@ -55,3 +55,7 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+import analyticsRoutes from "./routes/analyticsRoutes.js";
+app.use("/api/analytics", analyticsRoutes);
+
