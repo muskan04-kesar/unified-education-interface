@@ -6,6 +6,7 @@ export default function Sidebar(){
   const items = [
     {to:'/dashboard',label:'Dashboard',roles:['student','teacher','institution','government']},
     {to:'/student',label:'Student Profile',roles:['student']},
+    {to:'/schemes',label:'Govt Schemes',roles:['student','teacher','institution','government']},
     {to:'/teacher',label:'Teacher Profile',roles:['teacher']},
     {to:'/teacher/edit-students',label:'Edit Students',roles:['teacher']},
     {to:'/analytics',label:'Analytics',roles:['teacher','institution','government']},
