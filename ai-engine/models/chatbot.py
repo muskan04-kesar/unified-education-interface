@@ -1,25 +1,84 @@
 def ai_chat(message):
-    msg = message.lower()
+    msg = message.lower().strip()
 
-    # greetings
-    if "hello" in msg or "hi" in msg:
-        return "Hello! I'm your AI Assistant. How can I help you today?"
+    # ---------------------------
+    # GREETINGS & SMALL TALK
+    # ---------------------------
+    greetings = ["hello", "hi", "hey", "namaste", "good morning", "good evening"]
+    if any(g in msg for g in greetings):
+        return "Hello! I'm your AI Assistant for the Unified Education Interface 😊 How can I help you today?"
 
-    # explain APAR
+    # ---------------------------
+    # ABOUT SYSTEM
+    # ---------------------------
+    if "who are you" in msg or "what can you do" in msg:
+        return (
+            "I'm an AI Assistant integrated into the Unified Education Platform. "
+            "I can help with APAR generation, performance analytics, syllabus doubts, "
+            "feedback insights, and general student-teacher support!"
+        )
+
+    # ---------------------------
+    # APAR QUERIES
+    # ---------------------------
+    if "apar" in msg and "help" in msg:
+        return (
+            "Sure! I can generate the APAR for a teacher automatically. "
+            "Just provide attendance, feedback, discipline, and performance details."
+        )
+
     if "apar" in msg:
-        return "APAR means Annual Performance Appraisal Report. I can help you generate a teacher's APAR."
+        return (
+            "APAR stands for Annual Performance Appraisal Report. "
+            "I can generate strengths, improvements, training suggestions and rating for teachers."
+        )
 
-    # performance help
+    # ---------------------------
+    # PERFORMANCE ANALYTICS
+    # ---------------------------
     if "performance" in msg:
-        return "To generate performance summary, please provide marks, attendance and feedback."
+        return (
+            "Performance analysis includes marks, attendance, behaviour and feedback. "
+            "Send me these details and I will generate a personalized summary."
+        )
 
-    # summary request
     if "summary" in msg:
-        return "Sure! Send me attendance, marks, activities and feedback to create summary."
+        return "Sure! Send me marks, attendance, activities and feedback — I'll create a summary for you."
 
-    # feedback analytics
+    # ---------------------------
+    # FEEDBACK ANALYSIS
+    # ---------------------------
     if "feedback" in msg:
-        return "Feedback helps improve teaching quality. I can analyze feedback if you provide it."
+        return (
+            "Feedback helps identify strengths and improvement areas. "
+            "You can provide student feedback here, and I will analyze it."
+        )
 
-    # fallback
-    return "I'm here to help! Ask me anything about APAR, analytics, or performance."
+    # ---------------------------
+    # STUDENT QUERIES
+    # ---------------------------
+    if "exam" in msg or "marks" in msg:
+        return "Your marks reflect your academic progress. Keep practicing and revising regularly."
+
+    if "attendance" in msg:
+        return "Attendance above 85% is recommended for maintaining good academic standing."
+
+    # ---------------------------
+    # ADMIN QUERIES
+    # ---------------------------
+    if "admin" in msg or "dashboard" in msg:
+        return "Admin can view analytics, teacher reports, student profiles, and overall institution insights."
+
+    # ---------------------------
+    # THANK YOU / END
+    # ---------------------------
+    if "thank" in msg:
+        return "You're welcome! Feel free to ask anything 😊"
+
+    # ---------------------------
+    # DEFAULT / FALLBACK
+    # ---------------------------
+    return (
+        "I'm here to assist you with APAR, performance analytics, student support, "
+        "and teacher insights. Ask me anything!"
+    )
