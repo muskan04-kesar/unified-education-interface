@@ -4,10 +4,10 @@ import {
   getClassAttendance,
   getTopStudents,
   getWeakStudents,
-} from "../services/analyticsService";
+} from "../services/analyticsService.js";
 
 const Analytics = () => {
-  const classId = "6925e3c73b0bb7c3478063fe0";
+  const classId = "6925e3c73b0b7c3478063fe0";
 
   const [average, setAverage] = useState(null);
   const [attendance, setAttendance] = useState(null);
@@ -23,10 +23,16 @@ const Analytics = () => {
         const topData = await getTopStudents(classId);
         const weakData = await getWeakStudents(classId);
 
+        console.log("AVG DATA", avgData);
+        console.log("ATT DATA", attData);
+        console.log("TOP DATA", topData);
+        console.log("WEAK DATA", weakData);
+
         setAverage(avgData?.averageClassMarks || 0);
         setAttendance(attData?.attendancePercentage || 0);
-        setTopStudents(topData || []);
-        setWeakStudents(weakData || []);
+        setTopStudents(Array.isArray(topData) ? topData : []);
+        setWeakStudents(Array.isArray(weakData) ? weakData : []);
+
       } catch (error) {
         console.error("Error loading analytics:", error);
       } finally {

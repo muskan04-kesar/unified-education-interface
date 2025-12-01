@@ -1,4 +1,5 @@
 import StudentPerformance from "../models/performance.js";
+import Student from "../models/student.js";
 import mongoose from "mongoose";
 
 export const getClassAverage = async (req, res) => {
@@ -120,40 +121,37 @@ export const getTopStudents = async (req, res) => {
 
 export const getWeakStudents = async (req, res) => {
   try {
-    const classId = req.params.classId;
+    const { classId } = req.params;
 
-    const result = await StudentPerformance.aggregate([
-      {
-        $lookup: {
-          from: "students",
-          localField: "studentId",
-          foreignField: "_id",
-          as: "student"
-        }
-      },
-      { $unwind: "$student" },
+    const weak = await Student.aggregate([
       {
         $match: {
-          "student.classId": new mongoose.Types.ObjectId(classId)
-        }
+          classId: new mongoose.Types.ObjectId(classId),  
+        },
+      },
+      {
+        $unwind: "$marks",
       },
       {
         $group: {
-          _id: "$student._id",
-          name: { $first: "$student.name" },
-          avgMarks: { $avg: "$marks" }
-        }
+          _id: "$_id",
+          name: { $first: "$name" },
+          avgMarks: { $avg: "$marks.score" },
+        },
       },
       {
         $match: {
-          avgMarks: { $lt: 40 }
-        }
-      }
+          avgMarks: { $lt: 40 },
+        },
+      },
+      {
+        $sort: { avgMarks: 1 },
+      },
     ]);
 
-    res.json(result);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.json(weak);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
   }
 };
-

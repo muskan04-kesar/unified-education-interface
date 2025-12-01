@@ -10,12 +10,14 @@ export const getClassAttendance = async (classId) => {
   return res.json();
 };
 
-export const getTopStudents = async (classId) => {
-  const res = await fetch(`${API_URL}/class/${classId}/top`);
-  return res.json();
-};
+export async function getTopStudents(classId) {
+  const res = await fetch(`/api/analytics/class/${classId}/top`);
+  const data = await res.json();
+  return Array.isArray(data) ? data : [];
+}
 
-export const getWeakStudents = async (classId) => {
-  const res = await fetch(`${API_URL}/class/${classId}/weak`);
-  return res.json();
-};
+export async function getWeakStudents(classId) {
+  const res = await fetch(`/api/analytics/class/${classId}/weak`);
+  const data = await res.json();
+  return Array.isArray(data) ? data : [];
+}
