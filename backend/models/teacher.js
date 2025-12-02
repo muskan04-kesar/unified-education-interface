@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 const teacherSchema = new mongoose.Schema({
+
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
@@ -13,8 +14,27 @@ const teacherSchema = new mongoose.Schema({
     required: true
   },
 
-  department: { type: String },
-  subjects: { type: [String], default: [] }
+  aadhaar: {
+    type: String,
+    required: true
+  },
+
+  aparId: {
+    type: String,
+    required: true
+  },
+
+  department: String,
+  subjects: {
+    type: [String],
+    default: []
+  },
+
+  experienceYears: Number,
+  qualifications: String,
+
+  aiPerformanceSummary: String
+
 }, { timestamps: true });
 
 teacherSchema.index({ instituteId: 1 });

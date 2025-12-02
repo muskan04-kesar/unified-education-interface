@@ -11,13 +11,13 @@ export const getClassAttendance = async (classId) => {
 };
 
 export async function getTopStudents(classId) {
-  const res = await fetch(`/api/analytics/class/${classId}/top`);
+  const res = await fetch(`${API_URL}/class/${classId}/top`);
   const data = await res.json();
   return Array.isArray(data) ? data : [];
 }
 
 export async function getWeakStudents(classId) {
-  const res = await fetch(`/api/analytics/class/${classId}/weak`);
+  const res = await fetch(`${API_URL}/class/${classId}/weak`);
   const data = await res.json();
   return Array.isArray(data) ? data : [];
 }

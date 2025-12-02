@@ -1,31 +1,39 @@
 import mongoose from "mongoose";
 
 const studentSchema = new mongoose.Schema({
-  name: { type: String, required: true },
 
-  aadhaar: { 
-    type: String, 
-    required: true, 
-    unique: true 
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true
   },
 
-  // ⭐ ADD THESE FIELDS HERE
+  aadhaar: {
+    type: String,
+    required: true,
+    unique: true
+  },
+
   aadhaarVerified: {
     type: Boolean,
     default: false
   },
-  
-  aadhaarVerifiedAt: {
-    type: Date
-  },
 
-  guardianName: { type: String },
-  guardianPhone: { type: String },
+  aadhaarVerifiedAt: Date,
+
+  dob: Date,
 
   gender: {
     type: String,
     enum: ["male", "female", "other"]
   },
+
+  address: String,
+  district: String,
+  state: String,
+
+  guardianName: String,
+  guardianPhone: String,
 
   instituteId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -53,17 +61,14 @@ const studentSchema = new mongoose.Schema({
     type: String,
     enum: ["low", "medium", "high"],
     default: "low"
+  },
+
+  aiInsights: {
+    type: String
   }
+
 }, { timestamps: true });
 
 studentSchema.index({ aadhaar: 1 }, { unique: true });
-studentSchema.index({ instituteId: 1 });
-studentSchema.pre('save', function(next) {
-  if (this.isModified('aadhaar')) {
-    // Remove spaces/hyphens
-    this.aadhaar = this.aadhaar.replace(/[\s-]/g, '');
-  }
-  next();
-});
 
 export default mongoose.model("Student", studentSchema);

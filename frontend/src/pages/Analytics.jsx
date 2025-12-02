@@ -1,3 +1,17 @@
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  PieChart,
+  Pie,
+  Cell,
+  BarChart,
+  Bar,
+  Legend
+} from "recharts";
+
 import React, { useEffect, useState } from "react";
 import {
   getClassAverage,
@@ -49,51 +63,80 @@ const Analytics = () => {
 
   return (
     <div style={styles.container}>
-      <h1 style={styles.heading}>📊 Class Analytics Dashboard</h1>
+  <h1 style={styles.heading}>📊 Class Analytics Dashboard</h1>
 
-      {/* Metric Cards */}
-      <div style={styles.cardGrid}>
-        <div style={styles.card}>
-          <h3>📘 Average Marks</h3>
-          <p style={styles.highlightNumber}>{average}</p>
-        </div>
+  {/* CHARTS SECTION */}
+  <div style={styles.chartGrid}>
 
-        <div style={styles.card}>
-          <h3>🟦 Attendance</h3>
-          <p style={styles.highlightNumber}>{attendance}%</p>
-        </div>
-      </div>
-
-      {/* Top Students */}
-      <div style={styles.section}>
-        <h2>🏆 Top 3 Students</h2>
-        <ul style={styles.list}>
-          {topStudents.map((s) => (
-            <li key={s._id} style={styles.listItem}>
-              <span>{s.name}</span>
-              <span style={styles.goodScore}>{s.avgMarks}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      {/* Weak Students */}
-      <div style={styles.section}>
-        <h2>⚠️ Weak Students (Below 40%)</h2>
-        {weakStudents.length === 0 ? (
-          <p style={{ color: "green" }}>🎉 No weak students!</p>
-        ) : (
-          <ul style={styles.list}>
-            {weakStudents.map((s) => (
-              <li key={s._id} style={styles.listItem}>
-                <span>{s.name}</span>
-                <span style={styles.badScore}>{s.avgMarks}</span>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+    {/* Line Chart - Average Marks */}
+    <div style={styles.chartCard}>
+      <h3 style={styles.chartTitle}>📈 Average Marks Trend</h3>
+      <LineChart width={350} height={250} data={[
+        { name: "Overall", marks: average }
+      ]}>
+        <XAxis dataKey="name" />
+        <YAxis />
+        <Tooltip />
+        <Line type="monotone" dataKey="marks" stroke="#005eff" strokeWidth={3} />
+      </LineChart>
     </div>
+
+    {/* Pie Chart - Attendance */}
+    <div style={styles.chartCard}>
+      <h3 style={styles.chartTitle}>🟦 Attendance Percentage</h3>
+      <PieChart width={350} height={250}>
+        <Pie
+          data={[
+            { name: "Present", value: attendance },
+            { name: "Absent", value: 100 - attendance },
+          ]}
+          cx="50%"
+          cy="50%"
+          innerRadius={50}
+          outerRadius={80}
+          label
+          dataKey="value"
+        >
+          <Cell fill="#007bff" />
+          <Cell fill="#cccccc" />
+        </Pie>
+        <Tooltip />
+      </PieChart>
+    </div>
+
+  </div>
+
+  {/* TOP STUDENTS BAR CHART */}
+  <div style={styles.chartCardWide}>
+    <h3 style={styles.chartTitle}>🏆 Top Students Comparison</h3>
+
+    <BarChart width={700} height={300} data={topStudents}>
+      <XAxis dataKey="name" />
+      <YAxis />
+      <Tooltip />
+      <Legend />
+      <Bar dataKey="avgMarks" fill="#28a745" />
+    </BarChart>
+  </div>
+
+  {/* Weak Students Section */}
+  <div style={styles.section}>
+    <h2>⚠️ Weak Students (Below 40%)</h2>
+    {weakStudents.length === 0 ? (
+      <p style={{ color: "green" }}>🎉 No weak students!</p>
+    ) : (
+      <ul style={styles.list}>
+        {weakStudents.map((s) => (
+          <li key={s._id} style={styles.listItem}>
+            <span>{s.name}</span>
+            <span style={styles.badScore}>{s.avgMarks}</span>
+          </li>
+        ))}
+      </ul>
+    )}
+  </div>
+</div>
+
   );
 };
 
@@ -158,6 +201,34 @@ const styles = {
     color: "red",
     fontWeight: "bold",
   },
+  chartGrid: {
+  display: "flex",
+  gap: "20px",
+  justifyContent: "center",
+  flexWrap: "wrap",
+  marginBottom: "40px",
+},
+chartCard: {
+  background: "#fff",
+  padding: "20px",
+  borderRadius: "12px",
+  boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+  textAlign: "center",
+},
+chartCardWide: {
+  background: "#fff",
+  padding: "20px",
+  borderRadius: "12px",
+  boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+  marginTop: "40px",
+  textAlign: "center",
+},
+chartTitle: {
+  fontSize: "20px",
+  marginBottom: "10px",
+  fontWeight: "600",
+},
+
 };
 
 export default Analytics;

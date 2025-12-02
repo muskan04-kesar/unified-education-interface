@@ -8,31 +8,47 @@ const userSchema = new mongoose.Schema({
 
   email: {
     type: String,
-    required: true,
     unique: true,
+    sparse: true
   },
 
   password: {
     type: String,
-    required: true,
+  },
+
+  phone: {
+    type: String
   },
 
   role: {
     type: String,
-    enum: ["admin", "teacher", "student", "government"],
+    enum: ["student", "teacher", "admin", "government"],
     required: true,
   },
 
-  phone: {
+  // Aadhaar for student/teacher identity verification
+  aadhaar: {
     type: String,
+    index: true
   },
 
+  // APAR ID — required for teachers
+  aparId: {
+    type: String,
+    index: true
+  },
+
+  // Government users
+  govDepartment: {
+    type: String
+  },
+
+  // Institute mapping for student, teacher, admin
   instituteId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Institution",
+    ref: "Institution"
   }
-}, { timestamps: true });
 
-userSchema.index({ email: 1 }, { unique: true });
+}, { timestamps: true });
 
 export default mongoose.model("User", userSchema);

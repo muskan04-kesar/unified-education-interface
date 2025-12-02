@@ -1,10 +1,20 @@
 import mongoose from "mongoose";
 
 const studentPerformanceSchema = new mongoose.Schema({
+
   studentId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Student",
     required: true
+  },
+
+  teacherId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Teacher"
+  },
+
+  subjectId: {
+    type: String  // upgrade to Subject schema later
   },
 
   date: {
@@ -12,12 +22,13 @@ const studentPerformanceSchema = new mongoose.Schema({
     default: Date.now
   },
 
-  subject: { type: String },
-
-  attendance: { 
-    type: Boolean,
-    required: true
+  testType: {
+    type: String,
+    enum: ["attendance", "quiz", "exam", "assignment"],
+    default: "attendance"
   },
+
+  attendance: Boolean,
 
   marks: {
     type: Number,
@@ -25,9 +36,10 @@ const studentPerformanceSchema = new mongoose.Schema({
     max: 100
   },
 
-  behaviourNotes: { type: String },
+  behaviourNotes: String,
 
-  aiSummary: { type: String }
+  aiSummary: String
+
 }, { timestamps: true });
 
 studentPerformanceSchema.index({ studentId: 1 });
