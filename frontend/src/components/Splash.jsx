@@ -20,6 +20,7 @@ export default function Splash() {
             width: 130,
             height: 130,
             display: "block",
+            
             margin: "0 auto 12px",
           }}
         />
