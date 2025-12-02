@@ -1,150 +1,87 @@
-import React from "react";
-import Card from "../components/Card";
+import React from 'react';
+import Card from '../components/Card';
 import { getRole } from "../auth";
+import { ROLES } from "../roles";
 
 export default function Dashboard() {
-  const role = getRole(); // logged-in role
+  const role = getRole();
 
   return (
     <div className="page">
 
+      {/* Header */}
       <div className="header">
-        <h2>Dashboard</h2>
-        <p className="subtitle">Role: <strong>{role.toUpperCase()}</strong></p>
+        <div>
+          <div className="title">Dashboard</div>
+          <div className="subtitle">
+            Unified view — Students · Teachers · Institutions · Govt
+          </div>
+        </div>
+
+        <button className="btn">Create Report</button>
       </div>
 
+      {/* Cards Grid */}
       <div className="grid">
-        
-        {/* ---------------- STUDENT DASHBOARD ---------------- */}
-        {role === "student" && (
-          <>
-            <Card
-              title="My Profile"
-              desc="View your personal and academic details"
-              link="/student"
-              pill="Student"
-            />
 
-            <Card
-              title="Leaderboard"
-              desc="Check your ranking and performance"
-              link="/leaderboard"
-              pill="Rankings"
-            />
-
-            <Card
-              title="Government Schemes"
-              desc="Explore available benefits"
-              link="/schemes"
-              pill="Schemes"
-            />
-          </>
+        {/* Student Profile – visible to ALL except government */}
+        {role !== ROLES.GOVERNMENT && (
+          <Card
+            title="Student Profile"
+            desc="View student details and performance"
+            link="/student"
+            pill="Students"
+          />
         )}
 
-        {/* ---------------- TEACHER DASHBOARD ---------------- */}
-        {role === "teacher" && (
-          <>
-            <Card
-              title="Teacher Panel"
-              desc="Your tools & responsibilities"
-              link="/teacher"
-              pill="Teacher"
-            />
-
-            <Card
-              title="Edit Student Data"
-              desc="Update attendance & academics"
-              link="/teacher/edit-students"
-              pill="Manage"
-            />
-
-            <Card
-              title="Analytics"
-              desc="AI Insights and student analytics"
-              link="/analytics"
-              pill="Insights"
-            />
-
-            <Card
-              title="Leaderboard"
-              desc="View student rankings"
-              link="/leaderboard"
-              pill="Students"
-            />
-
-            <Card
-              title="Government Schemes"
-              desc="Education-related schemes"
-              link="/schemes"
-              pill="Schemes"
-            />
-          </>
+        {/* Teacher Tools – only teacher */}
+        {role === ROLES.TEACHER && (
+          <Card
+            title="Teacher Tools"
+            desc="Manage classes & attendance"
+            link="/teacher"
+            pill="Teachers"
+          />
         )}
 
-        {/* ---------------- INSTITUTION DASHBOARD ---------------- */}
-        {role === "institution" && (
-          <>
-            <Card
-              title="Institution Dashboard"
-              desc="Manage teachers, students, reports"
-              link="/institution"
-              pill="Institute"
-            />
-
-            <Card
-              title="Analytics"
-              desc="AI-generated institute analytics"
-              link="/analytics"
-              pill="Insights"
-            />
-
-            <Card
-              title="Leaderboard"
-              desc="Top students institution-wide"
-              link="/leaderboard"
-              pill="Top"
-            />
-
-            <Card
-              title="Govt Schemes"
-              desc="Student & teacher schemes"
-              link="/schemes"
-              pill="Schemes"
-            />
-          </>
+        {/* Analytics – not for student */}
+        {role !== ROLES.STUDENT && (
+          <Card
+            title="Analytics"
+            desc="AI insights and charts"
+            link="/analytics"
+            pill="Insights"
+          />
         )}
 
-        {/* ---------------- GOVERNMENT DASHBOARD ---------------- */}
-        {role === "government" && (
-          <>
-            <Card
-              title="Government Dashboard"
-              desc="Monitoring and policy tools"
-              link="/government"
-              pill="Govt"
-            />
+        {/* Leaderboard – ❌ hidden for government */}
+        {role !== ROLES.GOVERNMENT && (
+          <Card
+            title="Leaderboard"
+            desc="Top performing students"
+            link="/leaderboard"
+            pill="Gamify"
+          />
+        )}
 
-            <Card
-              title="National Analytics"
-              desc="AI insights on education data"
-              link="/analytics"
-              pill="Analytics"
-            />
+        {/* Institution */}
+        {role === ROLES.INSTITUTION && (
+          <Card
+            title="Institution Reports"
+            desc="NIRF & AISHE reports"
+            link="/institution"
+            pill="Institution"
+          />
+        )}
 
-            <Card
-              title="Leaderboard"
-              desc="Top ranked schools & students"
-              link="/leaderboard"
-              pill="Ranking"
-            />
-
-            <Card
-              title="Schemes"
-              desc="Manage and publish schemes"
-              link="/schemes"
-              pill="Schemes"
-            />
-          </>
+        {/* Government Panel */}
+        {role === ROLES.GOVERNMENT && (
+          <Card
+            title="Government Panel"
+            desc="Scheme monitoring"
+            link="/government"
+            pill="Govt"
+          />
         )}
 
       </div>

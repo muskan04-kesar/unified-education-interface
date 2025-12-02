@@ -10,7 +10,7 @@ export default function Sidebar(){
     {to:'/teacher',label:'Teacher Profile',roles:['teacher']},
     {to:'/teacher/edit-students',label:'Edit Students',roles:['teacher']},
     {to:'/analytics',label:'Analytics',roles:['teacher','institution','government']},
-    {to:'/leaderboard',label:'Leaderboard',roles:['student','teacher','institution','government']},
+    {to:'/leaderboard',label:'Leaderboard',roles:['student','teacher','institution']},
     {to:'/institution',label:'Institution',roles:['institution']},
     {to:'/government',label:'Government',roles:['government']},
   ];
@@ -19,8 +19,8 @@ export default function Sidebar(){
       <div className='brand'>
         <div className='logo'>UE</div>
         <div>
-          <div className='title'>Unified Education</div>
-          <div className='small'>Admin Console</div>
+          <div className='title'></div>
+          
         </div>
       </div>
       <nav className='nav'>
@@ -29,7 +29,7 @@ export default function Sidebar(){
         ))}
       </nav>
       <div style={{flex:1}} />
-      <div className='small'>Built for SIH</div>
+      <div className='small'></div>
     </aside>
   )
 }

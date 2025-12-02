@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 
-// NEW PAGE (Govt Schemes)
+// NEW PAGE
 import Schemes from "./pages/Schemes";
 
 // COMPONENTS
@@ -25,34 +25,49 @@ import Analytics from "./pages/Analytics";
 import Leaderboard from "./pages/Leaderboard";
 
 
-// ----------- LAYOUT WRAPPER (Hides Sidebar on Login) ------------
+// ---------------- LAYOUT: Hides Sidebar on Login ----------------
 function LayoutWithSidebar({ children }) {
   const location = useLocation();
 
-  // Only hide sidebar on login page
   const hideSidebar = location.pathname === "/";
 
   return (
     <div className="app-shell">
-      {!hideSidebar && <Sidebar />}   {/* Sidebar visible AFTER login */}
+      {!hideSidebar && <Sidebar />}
       <main className="main-area">{children}</main>
-      {!hideSidebar && <Chatbot />}   {/* Chatbot hidden on login */}
+      {!hideSidebar && <Chatbot />}
     </div>
   );
 }
 
 
-
-// ----------------------- MAIN APP ------------------------------
+// --------------------------- MAIN APP --------------------------
 export default function App() {
   const [loading, setLoading] = useState(true);
 
-  // Show Splash Screen for 2 seconds
+  // ⭐ GLOBAL SCHEMES STATE (Gov can edit it)
+  const [schemes, setSchemes] = useState([
+    {
+      id: 1,
+      name: "National Scholarship Scheme",
+      desc: "Financial assistance for meritorious students.",
+      link: "https://scholarships.gov.in/",
+    },
+    {
+      id: 2,
+      name: "PM e-Vidya",
+      desc: "Digital learning resources for all students.",
+      link: "https://www.pib.gov.in/PressReleasePage.aspx?PRID=1628347",
+    }
+  ]);
+
+  // SPLASH
   useEffect(() => {
     setTimeout(() => setLoading(false), 2000);
   }, []);
 
   if (loading) return <Splash />;
+
 
   return (
     <BrowserRouter>
@@ -64,36 +79,37 @@ export default function App() {
           <Route path="/" element={<Login />} />
 
 
-
-          {/* Dashboard (ALL ROLES) */}
+          {/* Dashboard */}
           <Route
             path="/dashboard"
             element={
-              <ProtectedRoute
-                allowedRoles={[
-                  ROLES.STUDENT,
-                  ROLES.TEACHER,
-                  ROLES.INSTITUTION,
-                  ROLES.GOVERNMENT,
-                ]}
-              >
+              <ProtectedRoute allowedRoles={[
+                ROLES.STUDENT,
+                ROLES.TEACHER,
+                ROLES.INSTITUTION,
+                ROLES.GOVERNMENT
+              ]}>
                 <Dashboard />
               </ProtectedRoute>
             }
           />
 
 
-
           {/* Student */}
           <Route
             path="/student"
             element={
-              <ProtectedRoute allowedRoles={[ROLES.STUDENT]}>
+              <ProtectedRoute
+                allowedRoles={[
+                  ROLES.STUDENT,
+                  ROLES.TEACHER,
+                  ROLES.INSTITUTION
+                ]}
+              >
                 <StudentProfile />
               </ProtectedRoute>
             }
           />
-
 
 
           {/* Teacher */}
@@ -116,7 +132,6 @@ export default function App() {
           />
 
 
-
           {/* Institution */}
           <Route
             path="/institution"
@@ -128,69 +143,62 @@ export default function App() {
           />
 
 
-
-          {/* Government */}
+          {/* Government (with scheme editing power) */}
           <Route
             path="/government"
             element={
               <ProtectedRoute allowedRoles={[ROLES.GOVERNMENT]}>
-                <GovernmentDashboard />
+                <GovernmentDashboard
+                  schemes={schemes}
+                  setSchemes={setSchemes}
+                />
               </ProtectedRoute>
             }
           />
 
 
-
-          {/* Analytics (not for students) */}
+          {/* Analytics */}
           <Route
             path="/analytics"
             element={
-              <ProtectedRoute
-                allowedRoles={[
-                  ROLES.TEACHER,
-                  ROLES.INSTITUTION,
-                  ROLES.GOVERNMENT,
-                ]}
-              >
+              <ProtectedRoute allowedRoles={[
+                ROLES.TEACHER,
+                ROLES.INSTITUTION,
+                ROLES.GOVERNMENT
+              ]}>
                 <Analytics />
               </ProtectedRoute>
             }
           />
 
 
-
-          {/* Leaderboard (all users) */}
+          {/* Leaderboard */}
           <Route
             path="/leaderboard"
             element={
-              <ProtectedRoute
-                allowedRoles={[
-                  ROLES.STUDENT,
-                  ROLES.TEACHER,
-                  ROLES.INSTITUTION,
-                  ROLES.GOVERNMENT,
-                ]}
-              >
+              <ProtectedRoute allowedRoles={[
+                ROLES.STUDENT,
+                ROLES.TEACHER,
+                ROLES.INSTITUTION,
+                ROLES.GOVERNMENT
+              ]}>
                 <Leaderboard />
               </ProtectedRoute>
             }
           />
 
 
-
-          {/* ✔️ New Govt Schemes Page (all users can access) */}
+          {/* NEW SCHEMES PAGE (Visible to ALL roles) */}
           <Route
             path="/schemes"
             element={
-              <ProtectedRoute
-                allowedRoles={[
-                  ROLES.STUDENT,
-                  ROLES.TEACHER,
-                  ROLES.INSTITUTION,
-                  ROLES.GOVERNMENT,
-                ]}
-              >
-                <Schemes />
+              <ProtectedRoute allowedRoles={[
+                ROLES.STUDENT,
+                ROLES.TEACHER,
+                ROLES.INSTITUTION,
+                ROLES.GOVERNMENT
+              ]}>
+                <Schemes schemes={schemes} />
               </ProtectedRoute>
             }
           />
