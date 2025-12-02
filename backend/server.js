@@ -9,7 +9,7 @@ import institutionRoutes from "./routes/institutionRoutes.js";
 import teacherRoutes from "./routes/teacherRoutes.js";
 import classRoutes from "./routes/classRoutes.js";
 import studentRoutes from "./routes/studentRoutes.js";
-import performanceRoutes from "./routes/performanceRoutes.js";
+
 import govReportRoutes from "./routes/govReportRoutes.js";
 
 import { authMiddleware } from "./middleware/auth.js"; // ✅ Correct
@@ -55,3 +55,6 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+import analyticsRoutes from "./routes/analyticsRoutes.js";
+app.use("/api/analytics", analyticsRoutes);
