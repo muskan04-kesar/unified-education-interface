@@ -1,7 +1,7 @@
 :root {
   --bg: #f4f7fb;
   --sidebar: #0f1724;
-  --accent: #0ea5e9;
+  --accent: #1a5aef;
   --accent2: #60a5fa;
   --text: #0f1724;
   --text-light: #6b7280;
@@ -44,7 +44,7 @@ html, body, #root { height: 100%; margin: 0; font-family: Inter, Segoe UI, Arial
   color: var(--white);
   font-weight: 700;
   font-size: 20px;
-  box-shadow: 0 6px 20px rgba(14,165,233,0.35);
+  box-shadow: 0 6px 20px rgba(144, 190, 166, 0.35);
 }
 .brand .title { font-weight: 700; font-size: 22px; color: var(--white); }
 .nav { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
@@ -58,7 +58,7 @@ html, body, #root { height: 100%; margin: 0; font-family: Inter, Segoe UI, Arial
   background: linear-gradient(90deg, var(--accent), var(--accent2));
   border-left: 3px solid white;
   padding-left: 18px;
-  box-shadow: 0 4px 15px rgba(14,165,233,0.24);
+  box-shadow: 0 4px 15px rgba(14, 98, 233, 0.24);
   color: white;
 }
 
@@ -103,7 +103,7 @@ html, body, #root { height: 100%; margin: 0; font-family: Inter, Segoe UI, Arial
 /* Login */
 .login-wrap {
   height: 100vh; display: flex; align-items: center; justify-content: center;
-  background: linear-gradient(135deg,#9DF9EF,#6AE7DD,#44DCCF);
+  background: linear-gradient(135deg,#1e80f7,#2b55de,#2a6beb);
   background-size: 300% 300%; animation: loginBG 8s ease infinite;
 }
 @keyframes loginBG { 0%,100% {background-position:0% 50%} 50% {background-position:100% 50%} }
