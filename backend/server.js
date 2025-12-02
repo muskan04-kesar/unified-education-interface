@@ -9,7 +9,7 @@ import institutionRoutes from "./routes/institutionRoutes.js";
 import teacherRoutes from "./routes/teacherRoutes.js";
 import classRoutes from "./routes/classRoutes.js";
 import studentRoutes from "./routes/studentRoutes.js";
-import performanceRoutes from "./routes/performanceRoutes.js";
+
 import govReportRoutes from "./routes/govReportRoutes.js";
 
 import { authMiddleware } from "./middleware/auth.js"; // ✅ Correct
@@ -57,5 +57,9 @@ app.listen(PORT, () => {
 });
 
 import analyticsRoutes from "./routes/analyticsRoutes.js";
+<<<<<<< HEAD
+app.use("/api/analytics", analyticsRoutes);
+=======
 app.use("/api/analytics", analyticsRoutes);
 
+>>>>>>> 094887f3aa539454d5b1c151ad67568d1f6eb087
