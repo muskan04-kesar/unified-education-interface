@@ -2,7 +2,9 @@
   "name": "sih-project-full",
   "version": "1.0.0",
   "private": true,
+  "proxy": "http://localhost:5000",
   "dependencies": {
+    "axios": "^1.13.2",
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "node-fetch": "^3.3.2",

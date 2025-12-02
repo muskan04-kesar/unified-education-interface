@@ -1,24 +1,11 @@
 import ClassModel from "../models/class.js";
 
-export const createClass = async (req, res, next) => {
+export const getClasses = async (req, res) => {
   try {
-    const c = await ClassModel.create(req.body);
-    res.status(201).json(c);
-
+    const classes = await ClassModel.find({});
+    res.json(classes);
   } catch (err) {
-    next(err);
-  }
-};
-
-export const listClasses = async (req, res, next) => {
-  try {
-    const list = await ClassModel.find()
-      .populate("classTeacherId", "userId")
-      .sort({ className: 1 });
-
-    res.json(list);
-
-  } catch (err) {
-    next(err);
+    console.error("Error loading classes:", err);
+    res.status(500).json({ message: "Error loading classes" });
   }
 };

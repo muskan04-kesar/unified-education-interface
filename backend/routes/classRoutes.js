@@ -1,9 +1,9 @@
 import express from "express";
-import { createClass, listClasses } from "../controllers/classController.js";
-import { authMiddleware, requireRole } from "../middleware/auth.js";
+import { getClasses } from "../controllers/classController.js";
+
 const router = express.Router();
 
-router.post("/", authMiddleware, requireRole("admin"), createClass);
-router.get("/", authMiddleware, listClasses);
+// CORRECT route for showing all classes
+router.get("/", getClasses);
 
 export default router;
