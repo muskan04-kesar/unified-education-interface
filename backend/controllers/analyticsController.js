@@ -2,6 +2,7 @@ import StudentPerformance from "../models/performance.js";
 import Student from "../models/student.js";
 import mongoose from "mongoose";
 
+// CLASS AVERAGE
 export const getClassAverage = async (req, res) => {
   try {
     const classId = req.params.classId;
@@ -16,25 +17,18 @@ export const getClassAverage = async (req, res) => {
         }
       },
       { $unwind: "$student" },
-      {
-        $match: {
-          "student.classId": new mongoose.Types.ObjectId(classId)
-        }
-      },
-      {
-        $group: {
-          _id: "$student.classId",
-          averageClassMarks: { $avg: "$marks" }
-        }
-      }
+      { $match: { "student.classId": new mongoose.Types.ObjectId(classId) } },
+      { $group: { _id: null, averageClassMarks: { $avg: "$marks" } } }
     ]);
 
     res.json(result[0] || { averageClassMarks: 0 });
+
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
+// CLASS ATTENDANCE
 export const getClassAttendance = async (req, res) => {
   try {
     const classId = req.params.classId;
@@ -49,40 +43,31 @@ export const getClassAttendance = async (req, res) => {
         }
       },
       { $unwind: "$student" },
-      {
-        $match: {
-          "student.classId": new mongoose.Types.ObjectId(classId)
-        }
-      },
+      { $match: { "student.classId": new mongoose.Types.ObjectId(classId) } },
       {
         $group: {
-          _id: "$student.classId",
+          _id: null,
           totalSessions: { $sum: 1 },
-          presentCount: {
-            $sum: {
-              $cond: [{ $eq: ["$attendance", true] }, 1, 0]
-            }
-          }
+          presentCount: { $sum: { $cond: [{ $eq: ["$attendance", true] }, 1, 0] } }
         }
       },
       {
         $project: {
           attendancePercentage: {
-            $multiply: [
-              { $divide: ["$presentCount", "$totalSessions"] },
-              100
-            ]
+            $multiply: [{ $divide: ["$presentCount", "$totalSessions"] }, 100]
           }
         }
       }
     ]);
 
     res.json(result[0] || { attendancePercentage: 0 });
+
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
+// TOP STUDENTS
 export const getTopStudents = async (req, res) => {
   try {
     const classId = req.params.classId;
@@ -97,11 +82,7 @@ export const getTopStudents = async (req, res) => {
         }
       },
       { $unwind: "$student" },
-      {
-        $match: {
-          "student.classId": new mongoose.Types.ObjectId(classId)
-        }
-      },
+      { $match: { "student.classId": new mongoose.Types.ObjectId(classId) } },
       {
         $group: {
           _id: "$student._id",
@@ -114,44 +95,42 @@ export const getTopStudents = async (req, res) => {
     ]);
 
     res.json(result);
+
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
+// FIXED WEAK STUDENT LOGIC
 export const getWeakStudents = async (req, res) => {
   try {
-    const { classId } = req.params;
+    const classId = req.params.classId;
 
-    const weak = await Student.aggregate([
+    const weak = await StudentPerformance.aggregate([
       {
-        $match: {
-          classId: new mongoose.Types.ObjectId(classId),  
-        },
+        $lookup: {
+          from: "students",
+          localField: "studentId",
+          foreignField: "_id",
+          as: "student"
+        }
       },
-      {
-        $unwind: "$marks",
-      },
+      { $unwind: "$student" },
+      { $match: { "student.classId": new mongoose.Types.ObjectId(classId) } },
       {
         $group: {
-          _id: "$_id",
-          name: { $first: "$name" },
-          avgMarks: { $avg: "$marks.score" },
-        },
+          _id: "$student._id",
+          name: { $first: "$student.name" },
+          avgMarks: { $avg: "$marks" }
+        }
       },
-      {
-        $match: {
-          avgMarks: { $lt: 40 },
-        },
-      },
-      {
-        $sort: { avgMarks: 1 },
-      },
+      { $match: { avgMarks: { $lt: 40 } } },
+      { $sort: { avgMarks: 1 } }
     ]);
 
     res.json(weak);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: error.message });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 };

@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 const govReportSchema = new mongoose.Schema({
+
   instituteId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Institution",
@@ -21,9 +22,25 @@ const govReportSchema = new mongoose.Schema({
     ref: "Student"
   }],
 
-  summary: { type: String }
-}, { timestamps: true });
+  nirfMetrics: {
+    type: Object,
+    default: {}
+  },
 
-govReportSchema.index({ instituteId: 1 });
+  infraMetrics: {
+    type: Object,
+    default: {}
+  },
+
+  aparSummary: {
+    type: Object,
+    default: {}
+  },
+
+  aiInsights: String,
+
+  summary: String
+
+}, { timestamps: true });
 
 export default mongoose.model("GovReport", govReportSchema);

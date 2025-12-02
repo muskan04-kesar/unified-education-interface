@@ -1,32 +1,52 @@
 import mongoose from "mongoose";
 
 const studentSchema = new mongoose.Schema({
-  name: { type: String, required: true },
 
-  aadhaar: { 
-    type: String, 
-    required: true, 
-    unique: true 
+  // Internal public-safe ID for student (used in URLs / mapping)
+  studentUUID: {
+    type: String,
+    unique: true,
+    sparse: true // allows existing docs without this field
   },
 
-  // ⭐ ADD THESE FIELDS HERE
+  // Link to generic User login account
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true
+  },
+
+  // Aadhaar (for prototype) – in production prefer storing a hash instead
+  aadhaar: {
+    type: String,
+    required: true,
+    unique: true
+  },
+
+  // KYC / Aadhaar verification status
   aadhaarVerified: {
     type: Boolean,
     default: false
   },
-  
-  aadhaarVerifiedAt: {
-    type: Date
-  },
 
-  guardianName: { type: String },
-  guardianPhone: { type: String },
+  aadhaarVerifiedAt: Date,
+
+  // Basic identity fields
+  dob: Date,
 
   gender: {
     type: String,
     enum: ["male", "female", "other"]
   },
 
+  address: String,
+  district: String,
+  state: String,
+
+  guardianName: String,
+  guardianPhone: String,
+
+  // Institute & class mapping
   instituteId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Institution",
@@ -39,6 +59,18 @@ const studentSchema = new mongoose.Schema({
     required: true
   },
 
+  // Onboarding – previous records & certificates (Digilocker, etc.)
+  previousRecords: {
+    type: [mongoose.Schema.Types.Mixed], // can store various structures
+    default: []
+  },
+
+  certificates: {
+    type: [mongoose.Schema.Types.Mixed],
+    default: []
+  },
+
+  // Gamification / analytics
   badges: {
     type: [String],
     default: []
@@ -53,17 +85,17 @@ const studentSchema = new mongoose.Schema({
     type: String,
     enum: ["low", "medium", "high"],
     default: "low"
+  },
+
+  aiInsights: {
+    type: String
   }
+
 }, { timestamps: true });
 
+// unique indexes
 studentSchema.index({ aadhaar: 1 }, { unique: true });
-studentSchema.index({ instituteId: 1 });
-studentSchema.pre('save', function(next) {
-  if (this.isModified('aadhaar')) {
-    // Remove spaces/hyphens
-    this.aadhaar = this.aadhaar.replace(/[\s-]/g, '');
-  }
-  next();
-});
+studentSchema.index({ studentUUID: 1 }, { unique: true, sparse: true });
 
 export default mongoose.model("Student", studentSchema);
+

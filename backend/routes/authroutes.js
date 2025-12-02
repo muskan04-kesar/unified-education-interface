@@ -1,95 +1,21 @@
 // routes/authRoutes.js
-import express from 'express';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import User from '../models/user.js';
+import express from "express";
+import { register, login } from "../controllers/authController.js";
 
 const router = express.Router();
 
-// Register
-router.post('/register', async (req, res) => {
-  try {
-    const { name, email, password, role } = req.body;
+/**
+ * @route   POST /api/auth/register
+ * @desc    Register user (student | teacher | admin | government)
+ * @access  Public
+ */
+router.post("/register", register);
 
-    // Check if user exists
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: 'User already exists' });
-    }
-
-    // Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Create user
-    const user = await User.create({
-      name,
-      email,
-      password: hashedPassword,
-      role: role || 'teacher'
-    });
-
-    // ✅ Generate JWT token
-    const token = jwt.sign(
-      { id: user._id, role: user.role },
-      process.env.JWT_SECRET,
-      { expiresIn: '30d' }
-    );
-
-    // ✅ Return token AND user
-    res.status(201).json({
-      token,  // ← This was missing!
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role
-      }
-    });
-  } catch (error) {
-    res.status(500).json({ message: 'Registration failed', error: error.message });
-  }
-});
-
-// Login
-router.post('/login', async (req, res) => {
-  try {
-    const { email, password } = req.body;
-   
-
-    // Find user
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(401).json({ message: 'Invalid credentials' });
-    }
-
-    // Check password
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(401).json({ message: 'Invalid credentials' });
-    }
-
-    // ✅ Generate token
-    const token = jwt.sign(
-      { id: user._id, role: user.role },
-      process.env.JWT_SECRET,
-      { expiresIn: '7d' }
-    );
-
-    // ✅ Return token AND user
-    res.json({
-      token,  // ← Make sure this is here too!
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role
-      }
-    });
-  } catch (error) {
-    res.status(500).json({ message: 'Login failed', error: error.message });
-  }
-});
+/**
+ * @route   POST /api/auth/login
+ * @desc    Login and receive JWT token
+ * @access  Public
+ */
+router.post("/login", login);
 
 export default router;
-
-

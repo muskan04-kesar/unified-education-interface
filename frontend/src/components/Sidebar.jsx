@@ -17,7 +17,12 @@ export default function Sidebar(){
   return (
     <aside className='sidebar'>
       <div className='brand'>
-        <div className='logo'>UE</div>
+        <div className=''><img
+          src="/assets/logo.png"
+          alt="logo"
+          style={{ width:120, height: 120, borderRadius: "100%", display: "block",boarder:"2px solid #fff",marginLeft:20,marginTop:5}}
+        />
+</div>
         <div>
           <div className='title'></div>
           
