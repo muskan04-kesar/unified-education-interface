@@ -99,7 +99,13 @@ export default function App() {
           <Route
             path="/student"
             element={
-              <ProtectedRoute allowedRoles={[ROLES.STUDENT]}>
+              <ProtectedRoute
+                allowedRoles={[
+                  ROLES.STUDENT,
+                  ROLES.TEACHER,
+                  ROLES.INSTITUTION
+                ]}
+              >
                 <StudentProfile />
               </ProtectedRoute>
             }
