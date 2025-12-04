@@ -1,41 +1,27 @@
 import GovernmentUser from "../models/government.js";
-import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-// REGISTER Govt User
-export const registerGovernmentUser = async (req, res) => {
+export const governmentLogin = async (req, res) => {
   try {
-    const { name, email, password, ministry } = req.body;
+    const { email } = req.body;
 
-    const exists = await GovernmentUser.findOne({ email });
-    if (exists) return res.status(400).json({ error: "Email already registered" });
+    if (!email) {
+      return res.status(400).json({ message: "Email is required" });
+    }
 
-    const hashed = await bcrypt.hash(password, 10);
+    // Check if user exists
+    let user = await GovernmentUser.findOne({ email });
 
-    const user = await GovernmentUser.create({
-      name,
-      email,
-      password: hashed,
-      ministry
-    });
+    // Auto-create user if not exists
+    if (!user) {
+      user = await GovernmentUser.create({
+        email,
+        name: "Government Officer",
+        role: "government"
+      });
+    }
 
-    res.status(201).json({ message: "Government user created", user });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
-
-// LOGIN Govt User
-export const loginGovernmentUser = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-
-    const user = await GovernmentUser.findOne({ email });
-    if (!user) return res.status(400).json({ error: "User not found" });
-
-    const match = await bcrypt.compare(password, user.password);
-    if (!match) return res.status(400).json({ error: "Invalid password" });
-
+    // Generate JWT
     const token = jwt.sign(
       { id: user._id, role: user.role },
       process.env.JWT_SECRET,
@@ -43,16 +29,13 @@ export const loginGovernmentUser = async (req, res) => {
     );
 
     res.json({
-      message: "Login successful",
+      message: "Government login successful",
       token,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        ministry: user.ministry,
-      }
+      user
     });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+
+  } catch (error) {
+    console.error("Gov login error: ", error);
+    res.status(500).json({ message: "Login failed", error: error.message });
   }
 };

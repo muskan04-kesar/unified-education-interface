@@ -5,6 +5,7 @@ import { Building2, Users, GraduationCap, TrendingUp, AlertTriangle, Download, M
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from "recharts";
 import { useNavigate } from "react-router-dom";
 
+
 const COLORS = ['#6366f1', '#10b981', '#f59e0b', '#ef4444'];
 
 export default function GovernmentDashboard() {

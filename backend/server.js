@@ -55,7 +55,7 @@ app.get("/api/protected", authMiddleware, (req, res) => {
 
 // Health route
 app.get("/", (req, res) => {
-  res.send("Hey Muskan ❤️ Your backend is running perfectly 🚀");
+  res.send("Hey ❤️ Your backend is running perfectly 🚀");
 });
 
 // Basic error handler

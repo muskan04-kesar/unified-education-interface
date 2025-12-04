@@ -1,12 +1,8 @@
 import express from "express";
-import {
-  registerGovernmentUser,
-  loginGovernmentUser
-} from "../controllers/governmentAuthController.js";
+import { governmentLogin } from "../controllers/governmentAuthController.js";
 
 const router = express.Router();
 
-router.post("/register", registerGovernmentUser);
-router.post("/login", loginGovernmentUser);
+router.post("/login", governmentLogin);
 
 export default router;
