@@ -1,211 +1,36 @@
-import React, { useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { useState } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import "@/App.css";
+import LandingPage from "@/pages/LandingPage";
+import LoginPage from "@/pages/LoginPage";
+import GovernmentDashboard from "@/pages/GovernmentDashboard";
+import InstitutionDashboard from "@/pages/InstitutionDashboard";
+import TeacherDashboard from "@/pages/TeacherDashboard";
+import StudentDashboard from "@/pages/StudentDashboard";
+import SettingsPage from "@/pages/SettingsPage";
+import ProfilePage from "@/pages/ProfilePage";
+import { Toaster } from "@/components/ui/sonner";
 
-// NEW PAGE
-import Schemes from "./pages/Schemes";
-
-// COMPONENTS
-import Splash from "./components/Splash";
-import ProtectedRoute from "./components/ProtectedRoute";
-import Sidebar from "./components/Sidebar";
-import Chatbot from "./components/Chatbot";
-
-// AUTH
-import { ROLES } from "./roles";
-
-// PAGES
-import Login from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
-import StudentProfile from "./pages/StudentProfile";
-import TeacherProfile from "./pages/TeacherProfile";
-import StudentTableEditor from "./pages/StudentTableEditor";
-import InstitutionDashboard from "./pages/InstitutionDashboard";
-import GovernmentDashboard from "./pages/GovernmentDashboard";
-import Analytics from "./pages/Analytics";
-import Leaderboard from "./pages/Leaderboard";
-
-
-// ---------------- LAYOUT: Hides Sidebar on Login ----------------
-function LayoutWithSidebar({ children }) {
-  const location = useLocation();
-
-  const hideSidebar = location.pathname === "/";
+function App() {
+  const [user, setUser] = useState(null);
 
   return (
-    <div className="app-shell">
-      {!hideSidebar && <Sidebar />}
-      <main className="main-area">{children}</main>
-      {!hideSidebar && <Chatbot />}
+    <div className="App">
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={<LoginPage setUser={setUser} />} />
+          <Route path="/government" element={user?.role === 'government' ? <GovernmentDashboard /> : <Navigate to="/login" />} />
+          <Route path="/institution" element={user?.role === 'institution' ? <InstitutionDashboard /> : <Navigate to="/login" />} />
+          <Route path="/teacher" element={user?.role === 'teacher' ? <TeacherDashboard /> : <Navigate to="/login" />} />
+          <Route path="/student" element={user?.role === 'student' ? <StudentDashboard /> : <Navigate to="/login" />} />
+          <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/profile" element={<ProfilePage user={user} />} />
+        </Routes>
+      </BrowserRouter>
+      <Toaster position="top-right" />
     </div>
   );
 }
 
-
-// --------------------------- MAIN APP --------------------------
-export default function App() {
-  const [loading, setLoading] = useState(true);
-
-  // ⭐ GLOBAL SCHEMES STATE (Gov can edit it)
-  const [schemes, setSchemes] = useState([
-    {
-      id: 1,
-      name: "National Scholarship Scheme",
-      desc: "Financial assistance for meritorious students.",
-      link: "https://scholarships.gov.in/",
-    },
-    {
-      id: 2,
-      name: "PM e-Vidya",
-      desc: "Digital learning resources for all students.",
-      link: "https://www.pib.gov.in/PressReleasePage.aspx?PRID=1628347",
-    }
-  ]);
-
-  // SPLASH
-  useEffect(() => {
-    setTimeout(() => setLoading(false), 2000);
-  }, []);
-
-  if (loading) return <Splash />;
-
-
-  return (
-    <BrowserRouter>
-      <LayoutWithSidebar>
-
-        <Routes>
-
-          {/* Public Login */}
-          <Route path="/" element={<Login />} />
-
-
-          {/* Dashboard */}
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute allowedRoles={[
-                ROLES.STUDENT,
-                ROLES.TEACHER,
-                ROLES.INSTITUTION,
-                ROLES.GOVERNMENT
-              ]}>
-                <Dashboard />
-              </ProtectedRoute>
-            }
-          />
-
-
-          {/* Student */}
-          <Route
-            path="/student"
-            element={
-              <ProtectedRoute
-                allowedRoles={[
-                  ROLES.STUDENT,
-                  ROLES.TEACHER,
-                  ROLES.INSTITUTION
-                ]}
-              >
-                <StudentProfile />
-              </ProtectedRoute>
-            }
-          />
-
-
-          {/* Teacher */}
-          <Route
-            path="/teacher"
-            element={
-              <ProtectedRoute allowedRoles={[ROLES.TEACHER]}>
-                <TeacherProfile />
-              </ProtectedRoute>
-            }
-          />
-
-          <Route
-            path="/teacher/edit-students"
-            element={
-              <ProtectedRoute allowedRoles={[ROLES.TEACHER]}>
-                <StudentTableEditor />
-              </ProtectedRoute>
-            }
-          />
-
-
-          {/* Institution */}
-          <Route
-            path="/institution"
-            element={
-              <ProtectedRoute allowedRoles={[ROLES.INSTITUTION]}>
-                <InstitutionDashboard />
-              </ProtectedRoute>
-            }
-          />
-
-
-          {/* Government (with scheme editing power) */}
-          <Route
-            path="/government"
-            element={
-              <ProtectedRoute allowedRoles={[ROLES.GOVERNMENT]}>
-                <GovernmentDashboard
-                  schemes={schemes}
-                  setSchemes={setSchemes}
-                />
-              </ProtectedRoute>
-            }
-          />
-
-
-          {/* Analytics */}
-          <Route
-            path="/analytics"
-            element={
-              <ProtectedRoute allowedRoles={[
-                ROLES.TEACHER,
-                ROLES.INSTITUTION,
-                ROLES.GOVERNMENT
-              ]}>
-                <Analytics />
-              </ProtectedRoute>
-            }
-          />
-
-
-          {/* Leaderboard */}
-          <Route
-            path="/leaderboard"
-            element={
-              <ProtectedRoute allowedRoles={[
-                ROLES.STUDENT,
-                ROLES.TEACHER,
-                ROLES.INSTITUTION,
-                ROLES.GOVERNMENT
-              ]}>
-                <Leaderboard />
-              </ProtectedRoute>
-            }
-          />
-
-
-          {/* NEW SCHEMES PAGE (Visible to ALL roles) */}
-          <Route
-            path="/schemes"
-            element={
-              <ProtectedRoute allowedRoles={[
-                ROLES.STUDENT,
-                ROLES.TEACHER,
-                ROLES.INSTITUTION,
-                ROLES.GOVERNMENT
-              ]}>
-                <Schemes schemes={schemes} />
-              </ProtectedRoute>
-            }
-          />
-
-        </Routes>
-
-      </LayoutWithSidebar>
-    </BrowserRouter>
-  );
-}
+export default App;
