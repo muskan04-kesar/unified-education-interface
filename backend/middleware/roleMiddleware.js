@@ -32,4 +32,11 @@ router.get("/my-classes", authMiddleware, requireRole("teacher"), (req, res) => 
   res.json({ message: "Teacher classes" });
 });
 
+export const governmentOnly = (req, res, next) => {
+  if (req.user.role !== "government") {
+    return res.status(403).json({ message: "Access denied: Government only" });
+  }
+  next();
+};
+
 export default router;

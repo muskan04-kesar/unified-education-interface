@@ -71,61 +71,66 @@ export default function LoginPage({ setUser }) {
           </TabsList>
 
           <form onSubmit={handleLogin} className="space-y-6">
+            {/* GOVERNMENT LOGIN — EMAIL */}
             <TabsContent value="government" className="space-y-4">
-              <div>
-                <Label htmlFor="aadhaar">Aadhaar Number</Label>
-                <Input
-                  id="aadhaar"
-                  data-testid="input-aadhaar"
-                  placeholder="XXXX-XXXX-XXXX"
-                  value={identifier}
-                  onChange={(e) => setIdentifier(e.target.value)}
-                  className="mt-2"
-                />
-              </div>
-            </TabsContent>
+  <div>
+    <Label htmlFor="gov-email">Government Email</Label>
+    <Input
+      id="gov-email"
+      data-testid="input-gov-email"
+      placeholder="gov@example.com"
+      value={identifier}
+      onChange={(e) => setIdentifier(e.target.value)}
+      className="mt-2"
+    />
+  </div>
+</TabsContent>
 
-            <TabsContent value="institution" className="space-y-4">
-              <div>
-                <Label htmlFor="aishe">AISHE Code</Label>
-                <Input
-                  id="aishe"
-                  data-testid="input-aishe"
-                  placeholder="C-12345"
-                  value={identifier}
-                  onChange={(e) => setIdentifier(e.target.value)}
-                  className="mt-2"
-                />
-              </div>
-            </TabsContent>
+{/* INSTITUTION LOGIN — AISHE */}
+<TabsContent value="institution" className="space-y-4">
+  <div>
+    <Label htmlFor="aishe">AISHE Code</Label>
+    <Input
+      id="aishe"
+      data-testid="input-aishe"
+      placeholder="C-12345"
+      value={identifier}
+      onChange={(e) => setIdentifier(e.target.value)}
+      className="mt-2"
+    />
+  </div>
+</TabsContent>
 
-            <TabsContent value="teacher" className="space-y-4">
-              <div>
-                <Label htmlFor="apar">APAR ID</Label>
-                <Input
-                  id="apar"
-                  data-testid="input-apar"
-                  placeholder="APAR-2024-XXXXX"
-                  value={identifier}
-                  onChange={(e) => setIdentifier(e.target.value)}
-                  className="mt-2"
-                />
-              </div>
-            </TabsContent>
+{/* TEACHER LOGIN — APAR */}
+<TabsContent value="teacher" className="space-y-4">
+  <div>
+    <Label htmlFor="apar">APAR ID</Label>
+    <Input
+      id="apar"
+      data-testid="input-apar"
+      placeholder="APAR-2024-XXXXX"
+      value={identifier}
+      onChange={(e) => setIdentifier(e.target.value)}
+      className="mt-2"
+    />
+  </div>
+</TabsContent>
 
-            <TabsContent value="student" className="space-y-4">
-              <div>
-                <Label htmlFor="email">Email or Student ID</Label>
-                <Input
-                  id="email"
-                  data-testid="input-email"
-                  placeholder="student@example.com"
-                  value={identifier}
-                  onChange={(e) => setIdentifier(e.target.value)}
-                  className="mt-2"
-                />
-              </div>
-            </TabsContent>
+{/* STUDENT LOGIN — AADHAAR */}
+<TabsContent value="student" className="space-y-4">
+  <div>
+    <Label htmlFor="student-aadhaar">Aadhaar Number</Label>
+    <Input
+      id="student-aadhaar"
+      data-testid="input-student-aadhaar"
+      placeholder="XXXX-XXXX-XXXX"
+      value={identifier}
+      onChange={(e) => setIdentifier(e.target.value)}
+      className="mt-2"
+    />
+  </div>
+</TabsContent>
+
 
             <div>
               <Label htmlFor="otp">OTP / Password</Label>
